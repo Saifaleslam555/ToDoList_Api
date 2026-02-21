@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using ToDoList.Helpers;
 using ToDoList.Models.DBcontext;
 using ToDoList.Repository.General_Repository;
+using ToDoList.Repository.Photo_Repository;
 using ToDoList.Repository.ToDoTasks;
 
 namespace ToDoList
@@ -38,6 +39,7 @@ namespace ToDoList
             //scopse
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped<IToDoTasksRepository, ToDoTasksRepository>();
+            builder.Services.AddScoped<IPhotoRepository, PhotoRepository>();
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
