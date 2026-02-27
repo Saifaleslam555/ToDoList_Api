@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
-namespace ToDoList.Models.DBcontext
+namespace ToDoList.Data
 {
     public class ApplicationUser:IdentityUser
     {
-        public string address { get; set; }
+        public string? address { get; set; }
     }
 }

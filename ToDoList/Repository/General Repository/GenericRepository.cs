@@ -1,7 +1,7 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
-using ToDoList.Models.DBcontext;
+using ToDoList.Data;
 
 namespace ToDoList.Repository.General_Repository
 {

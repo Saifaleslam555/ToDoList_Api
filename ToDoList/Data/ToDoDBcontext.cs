@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using ToDoList.Models;
 
-namespace ToDoList.Models.DBcontext
+namespace ToDoList.Data
 {
     public class ToDoDBcontext:IdentityDbContext<ApplicationUser>
     {
@@ -15,6 +16,7 @@ namespace ToDoList.Models.DBcontext
 
         public DbSet<TodoTask> tasks { get; set; }
         public DbSet<category>categories { get; set; }
+        public DbSet<UserProfile> profiles { get; set; }
 
         public DbSet<Photo> photos { get; set; } 
     }

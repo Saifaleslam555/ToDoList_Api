@@ -1,5 +1,5 @@
-﻿using ToDoList.Models;
-using ToDoList.Models.DBcontext;
+﻿using ToDoList.Data;
+using ToDoList.Models;
 using ToDoList.Repository.General_Repository;
 
 namespace ToDoList.Repository.ToDoTasks

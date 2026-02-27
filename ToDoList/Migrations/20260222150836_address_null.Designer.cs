@@ -14,8 +14,8 @@ using ToDoList.Data;
 namespace ToDoList.Migrations
 {
     [DbContext(typeof(ToDoDBcontext))]
-    [Migration("20260115221729_init")]
-    partial class init
+    [Migration("20260222150836_address_null")]
+    partial class address_null
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -213,7 +213,6 @@ namespace ToDoList.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("address")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -227,6 +226,54 @@ namespace ToDoList.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("ToDoList.Models.Photo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("publicID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("photos");
+                });
+
+            modelBuilder.Entity("ToDoList.Models.Profile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AccountID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("imgUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountID");
+
+                    b.ToTable("profiles");
                 });
 
             modelBuilder.Entity("ToDoList.Models.TodoTask", b =>
@@ -252,7 +299,7 @@ namespace ToDoList.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("categoryID")
+                    b.Property<int?>("categoryID")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("deadline_date")
@@ -336,15 +383,24 @@ namespace ToDoList.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ToDoList.Models.TodoTask", b =>
+            modelBuilder.Entity("ToDoList.Models.Profile", b =>
                 {
-                    b.HasOne("ToDoList.Models.category", "CategoryID")
-                        .WithMany("tasks")
-                        .HasForeignKey("categoryID")
+                    b.HasOne("ToDoList.Models.DBcontext.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("AccountID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("CategoryID");
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ToDoList.Models.TodoTask", b =>
+                {
+                    b.HasOne("ToDoList.Models.category", "Category")
+                        .WithMany("tasks")
+                        .HasForeignKey("categoryID");
+
+                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("ToDoList.Models.category", b =>

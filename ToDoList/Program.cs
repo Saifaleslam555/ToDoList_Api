@@ -2,11 +2,17 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using ToDoList.Data;
 using ToDoList.Helpers;
-using ToDoList.Models.DBcontext;
 using ToDoList.Repository.General_Repository;
 using ToDoList.Repository.Photo_Repository;
+using ToDoList.Repository.Profile_Repository;
 using ToDoList.Repository.ToDoTasks;
+using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
+using AutoMapper;
+using ToDoList.Server.Interfaces;
+using ToDoList.Service.Auth_Service;
 
 namespace ToDoList
 {
@@ -40,6 +46,15 @@ namespace ToDoList
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped<IToDoTasksRepository, ToDoTasksRepository>();
             builder.Services.AddScoped<IPhotoRepository, PhotoRepository>();
+            builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
+            
+
+            //auto mapper
+            builder.Services.AddAutoMapper(typeof(Program));
+           // builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+           
+
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
