@@ -42,5 +42,10 @@ namespace ToDoList.Repository.Photo_Repository
 
             return UploadResult;
         }
+
+        public string GetImgUrl(ImageUploadResult img) 
+        {
+            return img.SecureUrl.AbsoluteUri;
+        }
     }
 }

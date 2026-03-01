@@ -13,6 +13,7 @@ using System.Reflection;
 using AutoMapper;
 using ToDoList.Server.Interfaces;
 using ToDoList.Service.Auth_Service;
+using ToDoList.Repository.UnitOfWork;
 
 namespace ToDoList
 {
@@ -44,11 +45,11 @@ namespace ToDoList
 
             //scopse
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-            builder.Services.AddScoped<IToDoTasksRepository, ToDoTasksRepository>();
             builder.Services.AddScoped<IPhotoRepository, PhotoRepository>();
-            builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
             builder.Services.AddScoped<IAuthService, AuthService>();
-            
+
+            //unit of work scope 
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             //auto mapper
             builder.Services.AddAutoMapper(typeof(Program));

@@ -5,6 +5,6 @@ namespace ToDoList.Repository.Profile_Repository
 {
     public interface IProfileRepository:IGenericRepository<UserProfile>
     {
-
+        public Task<UserProfile> GetByAccountID(string id);
     }
 }
