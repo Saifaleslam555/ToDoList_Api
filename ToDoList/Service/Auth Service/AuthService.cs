@@ -13,6 +13,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using ToDoList.Repository.UnitOfWork;
 
 
 namespace ToDoList.Service.Auth_Service
@@ -20,16 +21,19 @@ namespace ToDoList.Service.Auth_Service
     public class AuthService : IAuthService
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IProfileRepository _profileRepository;
+        private readonly UnitOfWork uow;
+
+        // private readonly IProfileRepository _profileRepository;
         private readonly IPhotoRepository _photoRepository;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
 
-        public AuthService(UserManager<ApplicationUser> _userManager, IProfileRepository _profileRepository,
+        public AuthService(UserManager<ApplicationUser> _userManager, UnitOfWork uow,
             IPhotoRepository _photoRepository, IConfiguration _configuration, IMapper _mapper)
         {
             this._userManager = _userManager;
-            this._profileRepository = _profileRepository;
+            this.uow = uow;
+            // this._profileRepository = _profileRepository;
             this._photoRepository = _photoRepository;
             this._configuration = _configuration;
             this._mapper = _mapper;
@@ -64,8 +68,8 @@ namespace ToDoList.Service.Auth_Service
                 profile.AccountID = user.Id;
                 profile.imgUrl = ImgFromUser.PublicId;
 
-                await _profileRepository.Add(profile);
-                await _profileRepository.SaveChanges();
+                await uow.profileRepository.Add(profile);
+                await uow.Complete();
 
                 response.IsSuccess = true;
                 response.Message = "the process is done";

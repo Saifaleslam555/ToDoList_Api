@@ -11,6 +11,7 @@ namespace ToDoList.Repository.Photo_Repository
         public PhotoRepository(IOptions<CloudinarySettings> config)
         {
             var account = new Account(
+                
                 config.Value.Cloudname,
                 config.Value.ApiKey,
                 config.Value.ApiSecret

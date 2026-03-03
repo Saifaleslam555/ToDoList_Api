@@ -14,6 +14,7 @@ using AutoMapper;
 using ToDoList.Server.Interfaces;
 using ToDoList.Service.Auth_Service;
 using ToDoList.Repository.UnitOfWork;
+using ToDoList.Middlewares;
 
 namespace ToDoList
 {
@@ -35,9 +36,12 @@ namespace ToDoList
 
             );
 
+
+            //CloudinarySettings 
             builder.Services.Configure<CloudinarySettings>(builder.
                 Configuration.GetSection("CloudinarySettings"));
 
+            //Identity
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
             .AddEntityFrameworkStores<ToDoDBcontext>();
 
@@ -53,7 +57,6 @@ namespace ToDoList
 
             //auto mapper
             builder.Services.AddAutoMapper(typeof(Program));
-           // builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
            
 
 
@@ -63,6 +66,9 @@ namespace ToDoList
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
+            app.UseMiddleware<ExceptionMiddleware>();
+
+
             //if (app.Environment.IsDevelopment())
             //{
             //    app.MapOpenApi();
