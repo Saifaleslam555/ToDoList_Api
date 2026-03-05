@@ -56,7 +56,7 @@ namespace ToDoList
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             //auto mapper
-            builder.Services.AddAutoMapper(typeof(Program));
+            builder.Services.AddAutoMapper(cfg => { },typeof(Program));
            
 
 

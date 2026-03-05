@@ -27,7 +27,7 @@ namespace ToDoList.Repository.General_Repository
             return Task.CompletedTask;
         }
 
-        public async Task<T> GetById(string id)
+        public async Task<T> GetById(object id)
         {
             return await _dbset.FindAsync(id);
         }
