@@ -15,6 +15,7 @@ using ToDoList.Server.Interfaces;
 using ToDoList.Service.Auth_Service;
 using ToDoList.Repository.UnitOfWork;
 using ToDoList.Middlewares;
+using FluentValidation;
 
 namespace ToDoList
 {
@@ -57,7 +58,9 @@ namespace ToDoList
 
             //auto mapper
             builder.Services.AddAutoMapper(cfg => { },typeof(Program));
-           
+
+            //fluentvalidations
+            builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly, includeInternalTypes: true);
 
 
             builder.Services.AddEndpointsApiExplorer();

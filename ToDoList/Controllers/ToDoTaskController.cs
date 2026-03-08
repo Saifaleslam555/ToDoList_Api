@@ -6,6 +6,7 @@ using ToDoList.DTO;
 using ToDoList.Models;
 using ToDoList.Repository.ToDoTasks;
 using ToDoList.Repository.UnitOfWork;
+using ToDoList.Shared.Pagination;
 
 namespace ToDoList.Controllers
 {
@@ -84,6 +85,11 @@ namespace ToDoList.Controllers
             
             return Ok(taskbyid);
         }
+        [HttpPost("GetAllTasks")]
+        public async Task<IActionResult> GetAllTasks([FromQuery]PagingParam param) 
+        {
 
+            return Ok(await uow.toDoTasksRepository.GetAllTasks(param));
+        }
     }
 }

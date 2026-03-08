@@ -25,7 +25,7 @@ namespace ToDoList.Controllers
 
             if (result.IsSuccess) return Ok(result);
             
-            if (result.Error.Any())  return BadRequest(result);
+            if (result.Error.Any())  return BadRequest(result.Error);
 
             return StatusCode(500, result);
 

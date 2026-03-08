@@ -1,4 +1,6 @@
-﻿namespace ToDoList.DTO.Register
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ToDoList.DTO.Register
 {
     public class AccountDTO
     {

@@ -14,6 +14,7 @@ using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using ToDoList.Repository.UnitOfWork;
+using FluentValidation;
 
 
 namespace ToDoList.Service.Auth_Service
@@ -22,35 +23,43 @@ namespace ToDoList.Service.Auth_Service
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUnitOfWork uow;
-
-        // private readonly UnitOfWork uow;
-
-        // private readonly IProfileRepository _profileRepository;
         private readonly IPhotoRepository _photoRepository;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
+        private readonly IValidator<RegisterDTO> validator;
+
 
         public AuthService(UserManager<ApplicationUser> _userManager, IUnitOfWork uow,
-            IPhotoRepository _photoRepository, IConfiguration _configuration, IMapper _mapper)
+            IPhotoRepository _photoRepository, IConfiguration _configuration, IMapper _mapper
+            ,IValidator<RegisterDTO> validator)
         {
             this._userManager = _userManager;
             this.uow = uow;
-            //   this.uow = uow;
-            // this._profileRepository = _profileRepository;
             this._photoRepository = _photoRepository;
             this._configuration = _configuration;
             this._mapper = _mapper;
+            this.validator = validator;
         }
 
         public async Task<ServiceResponse> RegisterService(RegisterDTO UserFromRequest)
         {
-            var response = new ServiceResponse(); 
+            var response = new ServiceResponse();
+
+            var validatorResult = await validator.ValidateAsync(UserFromRequest);
+
+            if (!validatorResult.IsValid) {
+                
+                response.IsSuccess = false;
+                response.Error = validatorResult.Errors.Select(e => e.ErrorMessage).ToList();
+                
+                return response;
+            }
 
             ApplicationUser user = new ApplicationUser();
 
             var ImgFromUser =
-                    await _photoRepository.UploadImageAsync(UserFromRequest.profileDTO.Img);
-            //var ImgUrlFromUser = ImgFromUser.SecureUrl.AbsoluteUri;
+                   await _photoRepository.UploadImageAsync(UserFromRequest.profileDTO.Img);
+           
 
             user.Email = UserFromRequest.accountDTO.Email;
             user.UserName = UserFromRequest.accountDTO.username;
@@ -83,7 +92,6 @@ namespace ToDoList.Service.Auth_Service
 
                 await _userManager.DeleteAsync(user);
                  
-                //return StatusCode(500, ex.Message);
                 response.IsSuccess = false;
                 response.Message = ex.Message;
 

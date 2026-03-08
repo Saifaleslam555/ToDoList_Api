@@ -1,5 +1,6 @@
 ﻿using ToDoList.Models;
 using ToDoList.Repository.General_Repository;
+using ToDoList.Shared.Pagination;
 
 namespace ToDoList.Repository.ToDoTasks
 {
@@ -7,5 +8,7 @@ namespace ToDoList.Repository.ToDoTasks
     {
         public string GetStatus();
         public string ChangeStatus();
+
+        Task<PaginatedResult<TodoTask>> GetAllTasks(PagingParam param);
     }
 }

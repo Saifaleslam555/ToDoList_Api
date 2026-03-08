@@ -10,10 +10,8 @@ namespace ToDoList.Repository.UnitOfWork
     public class UnitOfWork : IUnitOfWork
     {
         private readonly ToDoDBcontext context;
-        private readonly CloudinarySettings cloudinarySettings;
-        private IPhotoRepository _photoRepository;
-        private IProfileRepository _profileRepository;
-        private IToDoTasksRepository _ToDoTasksRepository;
+        private IProfileRepository? _profileRepository;
+        private IToDoTasksRepository? _ToDoTasksRepository;
 
         public UnitOfWork(ToDoDBcontext context)
         {

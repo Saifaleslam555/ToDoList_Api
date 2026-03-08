@@ -1,6 +1,7 @@
 ﻿using ToDoList.Data;
 using ToDoList.Models;
 using ToDoList.Repository.General_Repository;
+using ToDoList.Shared.Pagination;
 
 namespace ToDoList.Repository.ToDoTasks
 {
@@ -16,6 +17,13 @@ namespace ToDoList.Repository.ToDoTasks
         public string ChangeStatus()
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<PaginatedResult<TodoTask>> GetAllTasks(PagingParam param)
+        {
+            var quary = context.tasks.AsQueryable();
+
+            return await PaginationHelpers.CreateAsync(quary,param.PageNumber,param.PageSize);
         }
 
         public string GetStatus()

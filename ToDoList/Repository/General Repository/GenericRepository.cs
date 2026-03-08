@@ -37,11 +37,6 @@ namespace ToDoList.Repository.General_Repository
             return await _dbset.ToListAsync();
         }
 
-        //public async Task SaveChanges()
-        //{
-        //    await context.SaveChangesAsync();
-        //}
-
         public Task Update(T entity)
         {
             _dbset.Update(entity);
