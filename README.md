@@ -36,12 +36,17 @@
 
 ---
 
-## 🧪 مفاهيم يتم اختبارها وتطبيقها (Concepts in Action)
+## 🌟 ميزات ومفاهيم متقدمة تم تطبيقها (Advanced Features & Concepts)
 
-* **Dependency Injection (DI):** إدارة التبعيات بشكل احترافي، واستخدام الـ Extension Methods (في مجلد `Extensions`) لتنظيف ملف `Program.cs`.
-* **Custom Middlewares:** معالجة الأخطاء المركزية (Global Error Handling) والتحكم في مسار الطلبات (Pipeline).
-* **Asynchronous Programming:** استخدام `async/await` في جميع العمليات التي تتطلب I/O لتحسين الأداء.
+لضمان جودة الكود وأداء التطبيق، تم تطبيق المفاهيم التالية:
 
+* **Global Exception Handling Middleware:** تم الاستغناء عن تكرار كتل `try-catch` في الـ Controllers من خلال بناء Middleware مركزي. هذا يضمن التقاط أي خطأ (Exception) في التطبيق وإرجاع استجابة (Response) موحدة ونظيفة بصيغة JSON، مما يعزز الأمان ويمنع تسريب تفاصيل النظام الحساسة.
+  
+* **Data Pagination:** لتحسين أداء الـ API وتقليل الحمل على الخادم وقاعدة البيانات، تم تطبيق نظام الترقيم (Pagination) عند استرجاع القوائم، بحيث يتم إرسال البيانات للعميل على شكل صفحات بدلاً من تحميل قاعدة البيانات بالكامل دفعة واحدة.
+
+* **Dependency Injection (DI):** إدارة التبعيات بشكل احترافي، واستخدام الـ Extension Methods لتنظيف وترتيب ملف `Program.cs`.
+
+* **Asynchronous Programming:** استخدام `async/await` في جميع العمليات التي تتطلب I/O (مثل التعامل مع قاعدة البيانات) لضمان عدم توقف مسار التنفيذ (Thread Blocking) وتحسين استجابة الخادم.
 ---
 
 ## 🚀 كيفية التشغيل (How to Run)
