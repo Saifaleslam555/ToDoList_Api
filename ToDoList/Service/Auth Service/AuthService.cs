@@ -15,6 +15,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using ToDoList.Repository.UnitOfWork;
 using FluentValidation;
+using Microsoft.Extensions.Options;
+using ToDoList.Configurations;
 
 
 namespace ToDoList.Service.Auth_Service
@@ -27,11 +29,11 @@ namespace ToDoList.Service.Auth_Service
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
         private readonly IValidator<RegisterDTO> validator;
-
+        private readonly IOptions<DefaultImgUrl> _defaultImgUrl;
 
         public AuthService(UserManager<ApplicationUser> _userManager, IUnitOfWork uow,
             IPhotoRepository _photoRepository, IConfiguration _configuration, IMapper _mapper
-            ,IValidator<RegisterDTO> validator)
+            ,IValidator<RegisterDTO> validator,IOptions<DefaultImgUrl> defaultImgUrl)
         {
             this._userManager = _userManager;
             this.uow = uow;
@@ -39,6 +41,7 @@ namespace ToDoList.Service.Auth_Service
             this._configuration = _configuration;
             this._mapper = _mapper;
             this.validator = validator;
+            _defaultImgUrl = defaultImgUrl;
         }
 
         public async Task<ServiceResponse> RegisterService(RegisterDTO UserFromRequest)
@@ -46,6 +49,8 @@ namespace ToDoList.Service.Auth_Service
             var response = new ServiceResponse();
 
             var validatorResult = await validator.ValidateAsync(UserFromRequest);
+
+            var imgFromUserUrl = "";
 
             if (!validatorResult.IsValid) {
                 
@@ -57,9 +62,14 @@ namespace ToDoList.Service.Auth_Service
 
             ApplicationUser user = new ApplicationUser();
 
-            var ImgFromUser =
-                   await _photoRepository.UploadImageAsync(UserFromRequest.profileDTO.Img);
-           
+            if (UserFromRequest.profileDTO.Img != null)
+            {
+                var ImgFromUser =
+                       await _photoRepository.UploadImageAsync(UserFromRequest.profileDTO.Img);
+
+                imgFromUserUrl = ImgFromUser.PublicId;
+            }
+            else { imgFromUserUrl = await _photoRepository.DefualtImg(); }
 
             user.Email = UserFromRequest.accountDTO.Email;
             user.UserName = UserFromRequest.accountDTO.username;
@@ -71,6 +81,7 @@ namespace ToDoList.Service.Auth_Service
             {
                 response.IsSuccess = false;
                 response.Error = identityResult.Errors.Select(e => e.Description).ToList();
+
                 return response;
             }
 
@@ -78,7 +89,7 @@ namespace ToDoList.Service.Auth_Service
             {
                 var profile = _mapper.Map<UserProfile>(UserFromRequest.profileDTO);
                 profile.AccountID = user.Id;
-                profile.imgUrl = ImgFromUser.PublicId;
+                profile.imgUrl = imgFromUserUrl;
 
                 await uow.profileRepository.Add(profile);
                 await uow.Complete();
@@ -88,7 +99,7 @@ namespace ToDoList.Service.Auth_Service
             }
             catch (Exception ex)
             {
-                await _photoRepository.DeleteImageAsync(ImgFromUser.PublicId);
+                await _photoRepository.DeleteImageAsync(imgFromUserUrl);
 
                 await _userManager.DeleteAsync(user);
                  
@@ -96,6 +107,7 @@ namespace ToDoList.Service.Auth_Service
                 response.Message = ex.Message;
 
             }
+
             return response;    
         }
 

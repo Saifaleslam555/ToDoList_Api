@@ -1,6 +1,7 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using Microsoft.Extensions.Options;
+using ToDoList.Configurations;
 using ToDoList.Helpers;
 
 namespace ToDoList.Repository.Photo_Repository
@@ -8,7 +9,9 @@ namespace ToDoList.Repository.Photo_Repository
     public class PhotoRepository : IPhotoRepository
     {
         private readonly Cloudinary _cloudinary;
-        public PhotoRepository(IOptions<CloudinarySettings> config)
+        private readonly IOptions<DefaultImgUrl> defualtImgUrl;
+
+        public PhotoRepository(IOptions<CloudinarySettings> config,IOptions<DefaultImgUrl> defualtImgUrl)
         {
             var account = new Account(
                 
@@ -17,6 +20,7 @@ namespace ToDoList.Repository.Photo_Repository
                 config.Value.ApiSecret
             );
             _cloudinary = new Cloudinary( account );
+            this.defualtImgUrl = defualtImgUrl;
         }
 
         public async Task<DeletionResult> DeleteImageAsync(string publicID)
@@ -47,6 +51,16 @@ namespace ToDoList.Repository.Photo_Repository
         public string GetImgUrl(ImageUploadResult img) 
         {
             return img.SecureUrl.AbsoluteUri;
+        }
+
+        public Task<string> DefualtImg()
+        {
+            var imgPulbicID = defualtImgUrl.Value.Url;
+
+            var img = _cloudinary.Api.UrlImgUp.BuildUrl(imgPulbicID);
+
+            return Task.FromResult(img);
+
         }
     }
 }
